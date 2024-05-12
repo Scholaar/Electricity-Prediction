@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Data Viewer</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div id="table-container">
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <!-- Table headers will be populated dynamically -->
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Table body will be populated dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", fetchData);
+
+        function fetchData() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://127.0.0.1:5000/get_data", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    renderTable(data);
+                }
+            };
+            xhr.send();
+        }
+
+        function renderTable(data) {
+            if (!data || data.length === 0) {
+                console.error("No data received or data is empty.");
+                return;
+            }
+        
+            var tableHeaders = Object.keys(data[0]);
+            var tableHead = document.querySelector("#data-table thead tr");
+            var tableBody = document.querySelector("#table-body");
+        
+            // Clear previous data
+            tableHead.innerHTML = "";
+            tableBody.innerHTML = "";
+        
+            // Populate table headers
+            tableHeaders.forEach(function (header) {
+                var th = document.createElement("th");
+                th.textContent = header;
+                tableHead.appendChild(th);
+            });
+        
+            // Populate table body
+            data.forEach(function (row) {
+                var tr = document.createElement("tr");
+                tableHeaders.forEach(function (header) {
+                    var td = document.createElement("td");
+                    td.textContent = row[header];
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            });
+        }
+        
+    </script>
+</body>
+</html>

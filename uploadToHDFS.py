@@ -37,13 +37,53 @@ def delete_file(client, file_path):
     client.delete(file_path)
     
 #  数据可视化部分
-    
 @app.route('/')
-def show_result():
+def index():
+    return render_template('index.html')
+
+@app.route('/upload', methods=['POST'])      
+def upload_fromWeb():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'})
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'})
+
+    # # 将文件保存到 HDFS
+    # with client.write('/path/to/1.txt', overwrite=True) as writer:
+    #     writer.write(file.read())
+    # print(file.filename)
+    upload_file(client, hdfs_path='/input', file_path=file.filename)
+    return jsonify({'file_url': f'http://localhost:9870/input/{file.filename}'})
+    
+@app.route('/output')
+def show_result1():
     page = request.args.get('page', default=1, type=int)
     per_page = 20  # 每页显示的行数
-    csv_data, total_pages, csv_title = read_csv(page, per_page, hdfs_output_path)
-    return render_template('index.html', csv_data=csv_data, total_pages=total_pages,csv_title=csv_title)
+    csv_data, total_pages, csv_title = read_csv(page, per_page, file_path=hdfs_output_path)
+    return render_template('show.html', csv_data=csv_data, total_pages=total_pages,csv_title=csv_title)
+
+@app.route('/Line')
+def show_result2():
+    page = request.args.get('page', default=1, type=int)
+    per_page = 20  # 每页显示的行数
+    csv_data, total_pages, csv_title = read_csv(page, per_page, file_path="/output/LineOutput.csv")
+    return render_template('show.html', csv_data=csv_data, total_pages=total_pages,csv_title=csv_title)
+
+@app.route('/Forest')
+def show_result3():
+    page = request.args.get('page', default=1, type=int)
+    per_page = 20  # 每页显示的行数
+    csv_data, total_pages, csv_title = read_csv(page, per_page, file_path="/output/ForestOutput.csv")
+    return render_template('show.html', csv_data=csv_data, total_pages=total_pages,csv_title=csv_title)
+
+@app.route('/GBT')
+def show_result4():
+    page = request.args.get('page', default=1, type=int)
+    per_page = 20  # 每页显示的行数
+    csv_data, total_pages, csv_title = read_csv(page, per_page, file_path="/output/GbtOutput.csv")
+    return render_template('show.html', csv_data=csv_data, total_pages=total_pages,csv_title=csv_title)
 
 def read_csv(page, per_page, file_path):
     start_index = (page - 1) * per_page
@@ -103,9 +143,9 @@ def makedata_test(file_path):
    
 if __name__ == "__main__":
     # mkdirs(client, hdfs_path)
-    upload_file(client, hdfs_path, local_datafile_path)
+    # upload_file(client, hdfs_path, local_datafile_path)
     # csv = read_file(hdfs_file_path)
     # csv.show()
-    # app.run(port=5000,debug=True)
+    app.run(port=5000,debug=True)
     # makedata_test(hdfs_datafile_path)
     # delete_df(hdfs_datafile_path)

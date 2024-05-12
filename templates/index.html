@@ -3,68 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSV Data</title>
+    <title>文件上传</title>
     <style>
-        /* 固定表头 */
-        /*.table-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #f1f1f1;
-            z-index: 1;
-        }*/
-
-        /* 为了使表头固定，需要设置数据部分的上边距 */
-        .table-body {
-            width: 100%;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
-        /* 表格样式 */
-        table {
-            border-collapse: collapse;
-            width: 100%;
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
         }
-
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
+        #fileInput {
+            display: none;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <input type="file">
-    <!-- 固定的表头 -->
-    <div class="table-header">
-        <table border="1">
-            <tr>
-                {% for column in csv_title %}
-                    <th>{{ column }}</th>
-                {% endfor %}
-            </tr>
-        </table>
+    <div class="container">
+        <h2>文件上传</h2>
+        <input type="file" id="fileInput" accept=".txt,.csv,.json">
+        <button class="btn" onclick="selectFile()">选择本地文件</button>
+        <button class="btn" onclick="uploadFile()">上传文件</button>
+        <button class="btn" onclick="goToPageA()">跳转到界面A</button>
+        <button class="btn" onclick="goToPageB()">跳转到界面B</button>
+        <p id="status"></p>
     </div>
 
-    <!-- 滚动加载的数据部分 -->
-    <div class="table-body">
-        <table border="1">
-            {% for row in csv_data[0:] %}
-                <tr>
-                    {% for column in row %}
-                        <td>{{ column }}</td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </table>
-    </div>
+    <script>
+        function selectFile() {
+            document.getElementById('fileInput').click();
+        }
 
-    <!-- 分页控件 -->
-    <div>
-        <a href="/?page=1">第一页</a>
-        {% for page_num in range(1, total_pages + 1) %}
-            <a href="/?page={{ page_num }}">{{ page_num }}</a>
-        {% endfor %}
-        <a href="/?page={{ total_pages }}">最后一页</a>
-    </div>
+        function uploadFile() {
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+
+            if (file) {
+                var formData = new FormData();
+                formData.append('file', file);
+
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('status').innerText = '文件已上传至： ' + data.file_url;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else {
+                alert('请先选择文件');
+            }
+        }
+
+        function goToPageA() {
+            window.location.href = '/pageA';
+        }
+
+        function goToPageB() {
+            window.location.href = '/pageB';
+        }
+    </script>
 </body>
 </html>

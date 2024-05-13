@@ -103,11 +103,13 @@ def predict():
     upload_file(client, "/output", "GBTOutput.csv")
     
 if __name__ == "__main__":
-    while True:
-        s = input("请输入操作：1.训练 2.预测 3.退出\n")
-        if s == "1":
-            train()
-        elif s == "2":
-            predict()
-        else:
-            break
+    # while True:
+    #     s = input("请输入操作：1.训练 2.预测 3.退出\n")
+    #     if s == "1":
+    #         train()
+    #     elif s == "2":
+    #         predict()
+    #     else:
+    #         break
+        
+    upload_file(client, "/output", "GBTOutput.csv")

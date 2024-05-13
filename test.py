@@ -1,21 +1,27 @@
-import os
+import subprocess
+from hdfs.client import Client, InsecureClient
+from pyspark import SparkContext, SparkConf
+from pyspark.sql import SparkSession, SQLContext
+from pyspark.sql.functions import col, mean, avg, when, cast, translate
+import json
+import csv
+from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
+from pyspark.sql import functions as F
+from pyspark.ml.regression import LinearRegression
 import pandas as pd
-# 获取文件夹中所有csv文件的路径
-folder_path = 'LineOutput'
-csv_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith('.csv')]
 
-# 根据修改日期对文件路径进行排序
-csv_files.sort(key=os.path.getmtime)
-print(csv_files)
+def read_file(file_path):
+    spark = SparkSession.builder.appName("test").getOrCreate()
+    df = spark.read.csv("hdfs://localhost:9000" + file_path, header=True, inferSchema=True)
+    df.show()
+    spark.stop()
+    
+read_file("/output/output.csv")
 
-# 读取第一个csv文件
-df = pd.read_csv(csv_files[0])
+import chardet
 
-# 读取并合并其余的csv文件
-for file in csv_files[1:]:
-    df_other = pd.read_csv(file)
-    for col in df_other.columns:
-        if col not in df.columns:
-            df[col] = df_other[col]
-
-df.to_csv('merged.csv', index=False)
+def method1():
+    with open('yourfile.csv', 'rb') as f:
+        result = chardet.detect(f.read())
+        file_encoding = result['encoding']

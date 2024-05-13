@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>机器学习</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>机器学习</h2>
+        <div><button class="btn" onclick="back()">返回</button></div>
+        <div>
+            <button class="btn" onclick="LineLearn()">线性回归模型训练</button>
+            <button class="btn" onclick="LinePredict()">线性回归模型预测</button>
+            <button class="btn" onclick="LineShow()">查看线性回归预测结果</button>
+        </div>
+        <div>
+            <button class="btn" onclick="ForestLearn()">随机森林模型训练</button>
+            <button class="btn" onclick="ForestPredict()">随机森林模型预测</button>
+            <button class="btn" onclick="ForestShow()">查看随机森林预测结果</button>
+        </div>
+        <div>
+            <button class="btn" onclick="GBTLearn()">梯度提升树模型训练</button>
+            <button class="btn" onclick="GBTPredict()">梯度提升树模型预测</button>
+            <button class="btn" onclick="GBTShow()">梯度提升树模型预测结果</button>
+        </div>
+        <p id="status"></p>
+    </div>
+
+    <script>
+        function LineLearn() {
+            document.getElementById('status').innerText = '正在训练线性回归模型...';
+            fetch('/LineLearn', {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('status').innerText = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        function LinePredict() {
+            document.getElementById('status').innerText = '正在进行线性回归预测...';
+            fetch('/LinePredict', {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('status').innerText = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        function ForestLearn() {
+            document.getElementById('status').innerText = '正在训练随机森林模型...';
+            fetch('/ForestLearn', {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('status').innerText = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        function ForestPredict() {
+            document.getElementById('status').innerText = '正在进行随机森林预测...';
+            fetch('/ForestPredict', {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('status').innerText = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        function GBTLearn() {
+            document.getElementById('status').innerText = '正在训练梯度提升树模型...';
+            fetch('/GBTLearn', {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('status').innerText = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        function GBTPredict() {
+            document.getElementById('status').innerText = '正在进行梯度提升树预测...';
+            fetch('/GBTPredict', {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('status').innerText = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        function LineShow() {
+            window.location.href = '/Line';
+        }
+        function ForestShow() {
+            window.location.href = '/Forest';
+        }
+        function GBTShow() {
+            window.location.href = '/GBT';
+        }
+        function back() {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

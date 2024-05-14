@@ -78,7 +78,7 @@ def upload_fromWeb():
     # with client.write('/path/to/1.txt', overwrite=True) as writer:
     #     writer.write(file.read())
     # print(file.filename)
-    delete_file(client, '/input/' + file.filename)
+    # delete_file(client, '/input/' + file.filename)
     upload_file(client, hdfs_path='/input', file_path=file.filename)
     return jsonify({'file_url': f'http://localhost:9870/input/{file.filename}'})
     

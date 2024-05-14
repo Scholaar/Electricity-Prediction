@@ -44,6 +44,7 @@
         }
 
         function processData() {
+            document.getElementById('status').innerText = '数据处理中...';
             fetch('/makedata', {
                 method: 'POST'
             })

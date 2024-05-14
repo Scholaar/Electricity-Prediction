@@ -80,7 +80,7 @@ def upload_fromWeb():
     # print(file.filename)
     # delete_file(client, '/input/' + file.filename)
     upload_file(client, hdfs_path='/input', file_path=file.filename)
-    return jsonify({'file_url': f'http://localhost:9870/input/{file.filename}'})
+    return jsonify({'file_url': f'http://localhost:9000/input/{file.filename}'})
     
 @app.route('/output')
 def show_result1():
@@ -133,7 +133,7 @@ def read_file(file_path):
 def delete_df(file_path):
     df = read_file(file_path)
     # 要去除的列名
-    cols_to_remove = ['MP_ID','STAT_CYCLE','MLOAD0','MLOAD1','MLOAD2','MLOAD3','MLOAD4','MLOAD5','MLOAD6','MLOAD7','MLOAD8','MLOAD9','MLOAD10','MLOAD11','MLOAD12','MLOAD13','MLOAD14','MLOAD15','MLOAD16','MLOAD17','MLOAD18','MLOAD19','MLOAD20','MLOAD21','MLOAD22','MLOAD23','WLOAD0','WLOAD1','WLOAD2','WLOAD3','WLOAD4','WLOAD5','WLOAD6','WLOAD7','WLOAD8','WLOAD9','WLOAD10','WLOAD11','WLOAD12','WLOAD13','WLOAD14','WLOAD15','WLOAD16','WLOAD17','WLOAD18','WLOAD19','WLOAD20','WLOAD21','WLOAD22','WLOAD23']
+    cols_to_remove = ['STAT_CYCLE','MLOAD0','MLOAD1','MLOAD2','MLOAD3','MLOAD4','MLOAD5','MLOAD6','MLOAD7','MLOAD8','MLOAD9','MLOAD10','MLOAD11','MLOAD12','MLOAD13','MLOAD14','MLOAD15','MLOAD16','MLOAD17','MLOAD18','MLOAD19','MLOAD20','MLOAD21','MLOAD22','MLOAD23','WLOAD0','WLOAD1','WLOAD2','WLOAD3','WLOAD4','WLOAD5','WLOAD6','WLOAD7','WLOAD8','WLOAD9','WLOAD10','WLOAD11','WLOAD12','WLOAD13','WLOAD14','WLOAD15','WLOAD16','WLOAD17','WLOAD18','WLOAD19','WLOAD20','WLOAD21','WLOAD22','WLOAD23']
     df_without_removed_columns = df.select([col for col in df.columns if col not in cols_to_remove])
     return df_without_removed_columns
 
@@ -245,7 +245,7 @@ def LinePredict():
 
     # 测试集
     _, test_data = nonon_df.randomSplit([0.7, 0.3], seed=123)
-    test_data_withfeature = test_data.select("AREA_NO","HOLIDAY","ELECTRO_TYPE", "TRADE_NO","WINDSPEED",\
+    test_data_withfeature = test_data.select("MP_ID","AREA_NO","HOLIDAY","ELECTRO_TYPE", "TRADE_NO","WINDSPEED",\
                                         "LAPSERATE","AIRPRESSURE","HUMIDITY","PRECIPITATIONRANINFALL")
     test_data_withfeature.coalesce(1).write.csv("LineOutput", mode='overwrite', header=True)
 
@@ -303,7 +303,7 @@ def ForestPredict():
 
     # 测试集
     _, test_data = nonon_df.randomSplit([0.7, 0.3], seed=123)
-    test_data_withfeature = test_data.select("AREA_NO","HOLIDAY","ELECTRO_TYPE", "TRADE_NO","WINDSPEED",\
+    test_data_withfeature = test_data.select("MP_ID","AREA_NO","HOLIDAY","ELECTRO_TYPE", "TRADE_NO","WINDSPEED",\
                                         "LAPSERATE","AIRPRESSURE","HUMIDITY","PRECIPITATIONRANINFALL")
     test_data_withfeature.coalesce(1).write.csv("ForestOutput", mode='overwrite', header=True)
 
@@ -361,7 +361,7 @@ def GBTPredict():
 
     # 测试集
     _, test_data = nonon_df.randomSplit([0.7, 0.3], seed=123)
-    test_data_withfeature = test_data.select("AREA_NO","HOLIDAY","ELECTRO_TYPE", "TRADE_NO","WINDSPEED",\
+    test_data_withfeature = test_data.select("MP_ID","AREA_NO","HOLIDAY","ELECTRO_TYPE", "TRADE_NO","WINDSPEED",\
                                         "LAPSERATE","AIRPRESSURE","HUMIDITY","PRECIPITATIONRANINFALL")
     test_data_withfeature.coalesce(1).write.csv("GBTOutput", mode='overwrite', header=True)
 
